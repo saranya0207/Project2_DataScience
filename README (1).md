@@ -1,73 +1,145 @@
-# Palm Oil Price Forecasting — ARIMA vs LSTM
+# Forecasting Palm Oil Price in Malaysia Using ARIMA and LSTM Model
+<img width="1000" height="350" alt="image" src="https://github.com/user-attachments/assets/2ded11dc-707a-47c2-b42e-834fa4cdde63" />
 
-This repository contains a single Google Colab notebook, **`Palm_Oil_Price_Forecasting_ARIMA_LSTM.ipynb`**, that forecasts monthly Malaysian crude palm oil prices using two approaches — a classical **ARIMA** model and a deep-learning **LSTM** model — and compares their accuracy. It is adapted from the thesis *"Peramalan Harga Minyak Sawit di Malaysia Menggunakan Model ARIMA dan LSTM"* (Saranya A/P Ramis, UKM), translated and reorganised into an English, report-style notebook with explanatory markdown alongside runnable code.
+## Introduction
 
-## Contents
+This project forecasts monthly Malaysian crude palm oil prices using two time-series forecasting approaches:
 
-- `Palm_Oil_Price_Forecasting_ARIMA_LSTM.ipynb` — the full notebook (markdown explanations + code).
+* **ARIMA (AutoRegressive Integrated Moving Average)**
+* **LSTM (Long Short-Term Memory)**
 
-## Requirements
+The objective is to compare the forecasting performance of both models using both non-iterative and rolling (iterative) forecast methods to identify the most effective approach for predicting crude palm oil prices in Malaysia.
 
-The notebook is designed to run on **Google Colab** (free tier is sufficient). It installs/uses:
+---
 
-- `pandas`, `numpy`, `matplotlib`, `seaborn`
-- `pmdarima` (installed automatically via `!pip install pmdarima -q`)
-- `statsmodels` (ADF test, ACF/PACF plots)
-- `scikit-learn` (MinMaxScaler, RMSE/MAPE metrics)
-- `tensorflow` / `keras` (LSTM model — pre-installed on Colab)
+## Objectives
 
-If running locally instead of Colab, remove the `google.colab` import/`drive.mount()` cell and point `file_path` to a local CSV.
+This study consists of the following objectives:
 
-## Data Format
+1. To forecast palm oil prices in Malaysia using the Autoregressive Integrated Moving Average (ARIMA) model and the Long Short-Term Memory (LSTM) model.
+2. To compare the forecasting performance of the ARIMA and LSTM models using Mean Absolute Percentage Error (MAPE) and Root Mean Square Error (RMSE).
+   
+---
 
-The notebook expects a CSV file with at least two columns:
+## Repository Structure
 
-| Column | Description |
-|---|---|
-| `Date` | Date of the observation (default parsed as `MM/DD/YYYY`; adjust the `format=` argument if yours differs) |
-| `Price` | Closing price; may contain comma thousands separators (e.g. `4,250.50`) — these are stripped automatically |
+```text
+├── Palm_Oil_Price_Forecasting_ARIMA_LSTM.ipynb
+└── README.md
+```
+---
+📦 Requirements
 
-This matches the format of monthly palm oil price data exported from Investing.com.
+This project is designed to run on Google Colab and uses the following Python libraries:
 
-## How to Run
+📊 Data Processing
+* pandas
+* numpy
 
-1. Upload your CSV (e.g. `palm_oil.csv`) to Google Drive, e.g. under `MyDrive/Data Science/palm_oil.csv`.
-2. Open the notebook in Google Colab.
-3. Run the **Setup** section — this mounts your Drive when prompted.
-4. Update the `file_path` variable in **both** places it appears (once before the ARIMA section, once before the LSTM section) to match your file's location.
-5. Run all cells from top to bottom (`Runtime → Run all`). The `auto_arima` search and the rolling-forecast loops (for both ARIMA and LSTM) are the slowest steps — expect these to take longer than the rest of the notebook combined, especially on long test sets, since a model is re-fitted at every step.
+📈 Data Visualization
+* matplotlib
+* seaborn
 
-## Notebook Structure
+📉 Statistical Analysis
+* statsmodels
+* pmdarima
 
-1. **Introduction & Methodology** — background on palm oil price volatility and an overview of the ARIMA and LSTM approaches, including the ARIMA equation and RMSE/MAPE formulas.
-2. **Setup & Data Loading** — installs/imports, Drive mount, data cleaning, 80/20 train-test split.
-3. **Exploratory Data Analysis** — full price history plot and train-test split visualisation.
-4. **ARIMA Modelling** — ADF stationarity test, ACF/PACF plots, differencing, `auto_arima` model selection, static forecast, and rolling (walk-forward) forecast, each with RMSE/MAPE and a comparison plot.
-5. **LSTM Modelling** — MinMaxScaler normalisation, sequence windowing (12-month lookback), a Bidirectional LSTM → Dropout → LSTM → Dense architecture, training (20 epochs, batch size 16), static forecast, and rolling forecast, each with RMSE/MAPE and a comparison plot.
-6. **Model Comparison** — combined plot of both models' rolling forecasts against actual prices, plus the thesis's benchmark accuracy table.
-7. **Conclusion & References** — summary of findings and the original thesis's reference list.
+🤖 Machine Learning & Evaluation
+* scikit-learn
 
-## Reference Benchmark Results (from the original thesis)
+🧠 Deep Learning
+*TensorFlow
+*Keras
 
-| Model | RMSE | MAPE |
-|---|---|---|
-| ARIMA(0,1,0) | 768.27 | 10.81% |
-| LSTM | 662.32 | 8.95% |
+---
+## Dataset
 
-Your own results will differ depending on your dataset's date range, length, and any random initialisation in the LSTM training — re-run the notebook on your data to generate your own figures for comparison.
+The project uses historical Malaysian crude palm oil futures price data obtained from Investing.com.
 
-## Notes / Fixes Applied
+**Data Source:**
 
-While translating the original script into this notebook, a few issues were corrected:
+https://www.investing.com/commodities/malaysian-crude-palm-oil-futures-historical-data
 
-- Removed a duplicate `adfuller()` call.
-- Removed a dead/buggy code block in the LSTM rolling-forecast section where indentation caused predictions to be appended outside the loop.
-- Fixed a typo (`predicted_pricess` → `predicted_price`).
-- Made the historical price chart title dynamically reflect the actual date range of the loaded data, rather than a hardcoded date range.
-- Standardised all metric calculations to consistently reference the `Price` column.
+### Required Dataset Format
 
-## Citation
+| Column | Description           |
+| ------ | --------------------- |
+| Date   | Observation date      |
+| Price  | Monthly closing price |
 
-If you use or build on this work, please cite the original thesis:
+---
 
-> Ramis, S. 2024. *Peramalan Harga Minyak Sawit di Malaysia Menggunakan Model ARIMA dan LSTM*. Universiti Kebangsaan Malaysia.
+## Methodology
+
+### 1. Data Preprocessing
+
+* Load and clean historical price data.
+* Convert dates to datetime format.
+* Remove formatting characters from price values.
+* Handle missing values.
+* Split data into training and testing sets.
+
+### 2. Exploratory Data Analysis (EDA)
+
+* Visualize historical price trends.
+* Examine time-series patterns.
+* Perform stationarity testing using the Augmented Dickey-Fuller (ADF) test.
+* Generate ACF and PACF plots.
+
+### 3. ARIMA Model
+
+* Determine optimal parameters using `auto_arima`.
+* Train the ARIMA model.
+* Generate non-iterative forecast and rolling forecast.
+* Evaluate model performance.
+
+### 4. LSTM Model
+
+* Normalize data using MinMaxScaler.
+* Create sequential datasets.
+* Build and train the LSTM architecture.
+* Generate non-iterative forecast and rolling forecast.
+* Evaluate model performance.
+
+### 5. Model Comparison
+
+Models are compared using:
+
+* Root Mean Square Error (RMSE)
+* Mean Absolute Percentage Error (MAPE)
+
+---
+
+## Results and Analysis
+
+### Figure 1. Monthly Malaysian Crude Palm Oil Prices from January 2015 to June 2026
+<img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/be37bcd8-e7cd-4774-8d3a-a0d95f0ee495" />
+
+### Figure 2. Non-iterative forecasting results generated by the ARIMA model.
+<img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/5dbee25d-7b81-4750-b27f-89c8512ab359" />
+
+### Figure 3. Rolling forecasting results generated by the ARIMA model.
+<img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/3e873a10-95d8-4775-b005-68cffd508152" />
+
+### Figure 4. Non-iterative forecasting results generated by the LSTM model.
+
+### Figure 5. Rolling forecasting results generated by the LSTM model.
+
+### Table 1 shows the RMSE and MAPE results for both models that forecasted using an iterative rolling method.
+
+| Model         | RMSE   | MAPE   |
+| ------------- | ------ | ------ |
+| ARIMA (0,1,0) | 768.27 | 10.81% |
+| LSTM          | 662.32 | 8.95%  |
+
+### Performance Summary
+
+The LSTM model achieved lower RMSE and MAPE values than the ARIMA model, indicating superior forecasting accuracy for the dataset used in this study. The results suggest that LSTM is more effective at capturing complex and nonlinear patterns in crude palm oil price movements.
+
+---
+
+## Conclusion
+
+This project demonstrates the use of both traditional statistical methods and deep learning techniques for forecasting Malaysian crude palm oil prices. While ARIMA provides a simple and interpretable forecasting framework, the LSTM model delivered better predictive performance based on the evaluation metrics. These findings indicate that deep learning approaches can be valuable tools for commodity price forecasting when sufficient historical data is available.
+
+However, it should be noted that the dataset used is relatively small, and the forecasting results may not achieve high real-world accuracy. This is because the model does not take into account other external factors such as macroeconomic conditions, supply-demand shocks, and policy changes, which can significantly influence palm oil prices.

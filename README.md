@@ -28,7 +28,7 @@ This study consists of the following objectives:
 └── README.md
 ```
 ---
-📦 Requirements
+## 📦 Requirements
 
 This project is designed to run on Google Colab and uses the following Python libraries:
 
